@@ -4,6 +4,7 @@ import dotenv from 'dotenv'
 import cors from 'cors'
 import { MongoClient } from 'mongodb'
 import chalk from 'chalk'
+import { userSignIn, userSignUp } from '../src/controllers/userControllers.js'
 
 
 dotenv.config()
@@ -14,15 +15,10 @@ app.use(cors())
 app.use(express())
 app.use(express.json())
 
+app.post('/sign-up', userSignUp)
+app.post('/sign-in', userSignIn)
 
-app.post('/users', (req, res) => {
 
-
-})
-
-app.get('/users', (req, res) => {
-
-})
 app.listen(PORT, ()=> {
     console.log(chalk.bold.green(`Server Online, port: ${PORT} `))
 })
