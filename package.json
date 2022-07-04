@@ -15,7 +15,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "npx nodemon ./src/index.js"
+    "start": "node ./src/index.js"
   },
   "keywords": [],
   "author": "",

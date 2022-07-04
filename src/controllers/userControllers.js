@@ -25,32 +25,30 @@ export async function userSignUp(req, res){
     try {
 
         const {error} = signupSchema.validate(user)
+        if (error) {
+            return res.sendStatus(422)
+        }
 
-    if (error) {
-        return res.sendStatus(422)
-    }
+        const users = await db.collection('users').find({}).toArray()
+        if (users.some(elem => elem.email === user.email)) {
+            return res.status(409).send('Usuário já existente')
+        }
 
-    const users = await db.collection('users').find({}).toArray()
-    if (users.some(elem => elem.email === user.email)) {
-        return res.sendStatus(409)
-    }
+            const passwordCrypto = bcrypt.hashSync(user.password, 10)
 
-        const passwordCrypto = bcrypt.hashSync(user.password, 10)
+            await db.collection('users').insertOne({...user, password: passwordCrypto})
+        
+            res.status(201).send('Usuário criado com sucesso')
 
-        await db.collection('users').insertOne({...user, password: passwordCrypto})
-    
-        res.status(201).send('Usuário criado com sucesso')
-
-    } catch (error) {
-        console.log(error)
-        res.sendStatus(500)
-    }
+        } catch (error) {
+            console.log(error)
+            res.sendStatus(500)
+        }
     
 }
 
 
 export async function userSignIn(req, res){
-
     const user = req.body
     try{
         const {error} = signinSchema.validate(user)
